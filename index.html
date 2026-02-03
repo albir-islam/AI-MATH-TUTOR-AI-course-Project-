@@ -599,7 +599,13 @@
   </div>
 
   <script>
-    const API = "http://127.0.0.1:5000";
+    const API = (() => {
+      const origin = (window.location && window.location.origin) ? window.location.origin : "";
+      // If loaded from the Flask server, use same-origin.
+      if (origin && origin.startsWith("http")) return origin;
+      // If opened directly (file://), fall back to the default backend port.
+      return "http://127.0.0.1:5001";
+    })();
 
     const AUDIO = {
       bg: "Assets/bg.mp3",

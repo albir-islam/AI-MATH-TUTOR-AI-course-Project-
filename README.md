@@ -41,7 +41,13 @@ python back.py
 
 Then open your browser at:
 
-- `http://127.0.0.1:5000`
+- `http://127.0.0.1:5001`
+
+If you need a different port:
+
+```bash
+PORT=5001 python back.py
+```
 
 ## Quickstart (Windows PowerShell)
 
@@ -61,7 +67,7 @@ py back.py
 
 ## API endpoints
 
-The frontend calls these endpoints (base URL: `http://127.0.0.1:5000`):
+The frontend calls these endpoints (base URL: `http://127.0.0.1:5001` by default):
 
 - `POST /start` – start a session (name, duration, level)
 - `GET /question` – get a new question

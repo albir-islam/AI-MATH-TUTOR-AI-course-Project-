@@ -321,5 +321,7 @@ if __name__ == "__main__":
     if os.environ.get("RUN_TESTS") == "1":
         pass
     else:
-        print("Starting Flask server at http://127.0.0.1:5000")
-        app.run(host="127.0.0.1", port=5000, debug=True, use_reloader=False)
+        host = os.environ.get("HOST", "127.0.0.1")
+        port = int(os.environ.get("PORT", "5001"))
+        print(f"Starting Flask server at http://{host}:{port}")
+        app.run(host=host, port=port, debug=True, use_reloader=False)
