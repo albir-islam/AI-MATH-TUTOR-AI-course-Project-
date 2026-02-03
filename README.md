@@ -80,7 +80,7 @@ The frontend calls these endpoints (base URL: `http://127.0.0.1:5001` by default
 - `index.html` – UI (game flow, charts/heatmap canvas, audio)
 - `Assets/` – sound effects and background music
 
-## Notes / limitations
+## Notes/limitations
 
 - Session state is in-memory (single-process). Refreshing/restarting the backend resets the session.
 - CORS is permissive (`*`) for local development.
@@ -94,8 +94,6 @@ If you’re reviewing this for grading, the key AI component is the explainable 
 ---
 
 ## Screenshots
-
-Add screenshots to `Assets/` (or an `Assets/screenshots/` folder) and link them here.
 
 ![Start screen](Assets/screenshot-start.png)
 
