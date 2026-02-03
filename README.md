@@ -97,10 +97,8 @@ If you’re reviewing this for grading, the key AI component is the explainable 
 
 Add screenshots to `Assets/` (or an `Assets/screenshots/` folder) and link them here.
 
-Example (replace filenames with your real screenshots):
-
-```markdown
 ![Start screen](Assets/screenshot-start.png)
+
 ![Gameplay](Assets/screenshot-gameplay.png)
+
 ![Results dashboard](Assets/screenshot-results.png)
-```
