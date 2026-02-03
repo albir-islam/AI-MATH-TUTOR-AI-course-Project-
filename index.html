@@ -1249,7 +1249,7 @@
           throw new Error(`Server error (${res.status})`);
         }
       } catch (err) {
-        const msg = "Backend not reachable. Start the Flask server: `python back.py` (http://127.0.0.1:5000).";
+        const msg = `Backend not reachable at ${API}. Start the Flask server: \`python back.py\` (default http://127.0.0.1:5001).`;
         if (introError) introError.textContent = msg;
         else alert(msg);
         console.error("Failed to start game:", err);
