@@ -1,0 +1,1672 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>Galactic Math Challenge</title>
+  <!-- Fonts: Orbitron for headers, Poppins for text -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Poppins:wght@300;400;600&display=swap"
+    rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    :root {
+      --neon-blue: #00f3ff;
+      --neon-pink: #bc13fe;
+      --glass-bg: rgba(16, 20, 40, 0.7);
+      --glass-border: rgba(255, 255, 255, 0.1);
+      --text-main: #ffffff;
+      --text-dim: #a0a0c0;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-main);
+      background: #0f0c29;
+      /* fallback */
+      background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
+      overflow-x: hidden;
+    }
+
+    /* Animated stars background effect */
+    body::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background:
+        radial-gradient(white, rgba(255, 255, 255, .2) 2px, transparent 3px),
+        radial-gradient(white, rgba(255, 255, 255, .15) 1px, transparent 2px),
+        radial-gradient(white, rgba(255, 255, 255, .1) 2px, transparent 3px);
+      background-size: 550px 550px, 350px 350px, 250px 250px;
+      background-position: 0 0, 40px 60px, 130px 270px;
+      animation: starMove 120s linear infinite;
+      z-index: -1;
+    }
+
+    @keyframes starMove {
+      from {
+        transform: translateY(0);
+      }
+
+      to {
+        transform: translateY(-550px);
+      }
+    }
+
+    h1,
+    h2,
+    h3 {
+      font-family: 'Orbitron', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin: 0 0 20px 0;
+      text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
+    }
+
+    h1 {
+      color: var(--neon-blue);
+      font-size: 2.2rem;
+    }
+
+    h2 {
+      color: var(--neon-pink);
+      font-size: 1.5rem;
+    }
+
+    /* Glassmorphism Card */
+    .game-container {
+      background: var(--glass-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      padding: 40px;
+      width: 90%;
+      max-width: 500px;
+      box-shadow:
+        0 8px 32px 0 rgba(0, 0, 0, 0.5),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+      text-align: center;
+      animation: floatIn 0.8s ease-out;
+      position: relative;
+    }
+
+    @keyframes floatIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.95);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    /* Inputs & Selects */
+    label {
+      display: block;
+      color: var(--text-dim);
+      margin-bottom: 8px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      text-align: left;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    select {
+      width: 100%;
+      padding: 15px;
+      margin-bottom: 20px;
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      background: rgba(0, 0, 0, 0.3);
+      color: #fff;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.1rem;
+      text-align: center;
+      transition: all 0.3s ease;
+      box-sizing: border-box;
+    }
+
+    input:focus,
+    select:focus {
+      outline: none;
+      border-color: var(--neon-blue);
+      box-shadow: 0 0 15px rgba(0, 243, 255, 0.2);
+    }
+
+    /* Buttons */
+    button {
+      width: 100%;
+      padding: 18px;
+      background: linear-gradient(135deg, var(--neon-blue), #007cf0);
+      border: none;
+      border-radius: 12px;
+      color: #000;
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 700;
+      font-size: 1.1rem;
+      cursor: pointer;
+      text-transform: uppercase;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0, 243, 255, 0.3);
+      position: relative;
+      overflow: hidden;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 243, 255, 0.5);
+      filter: brightness(1.1);
+    }
+
+    button:active {
+      transform: translateY(1px);
+    }
+
+    /* Game UI specific */
+    .question {
+      font-size: 3.5rem;
+      font-family: 'Orbitron', sans-serif;
+      margin: 30px 0;
+      text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+    }
+
+    .stats {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding-bottom: 15px;
+    }
+
+    .score,
+    .timer {
+      font-size: 0.9rem;
+      letter-spacing: 1px;
+      color: var(--text-dim);
+    }
+
+    .score span,
+    .timer span {
+      display: block;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.4rem;
+      color: var(--neon-blue);
+      margin-top: 5px;
+    }
+
+    .timer span {
+      color: var(--neon-pink);
+    }
+
+    /* Feedback */
+    .feedback {
+      min-height: 20px;
+      margin-top: 15px;
+      padding: 15px;
+      border-radius: 10px;
+      font-weight: 600;
+      opacity: 0.9;
+      transform: scale(1);
+    }
+
+    .feedback.correct {
+      background: rgba(46, 204, 113, 0.2) !important;
+      border: 1px solid #2ecc71;
+      color: #2ecc71 !important;
+      box-shadow: 0 0 20px rgba(46, 204, 113, 0.2);
+    }
+
+    /* Result Stats Grid */
+    .result-stats {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+      margin: 25px 0;
+    }
+
+    .stat-box {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 15px;
+      border-radius: 12px;
+      text-align: center;
+    }
+
+    .stat-box h3 {
+      font-size: 1.5rem;
+      margin: 0;
+      color: #fff;
+    }
+
+    .stat-box p {
+      margin: 5px 0 0 0;
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      text-transform: uppercase;
+    }
+
+    /* New CSS Animations */
+    @keyframes shake {
+      0% {
+        transform: translate(1px, 1px) rotate(0deg);
+      }
+
+      10% {
+        transform: translate(-1px, -2px) rotate(-1deg);
+      }
+
+      20% {
+        transform: translate(-3px, 0px) rotate(1deg);
+      }
+
+      30% {
+        transform: translate(3px, 2px) rotate(0deg);
+      }
+
+      40% {
+        transform: translate(1px, -1px) rotate(1deg);
+      }
+
+      50% {
+        transform: translate(-1px, 2px) rotate(-1deg);
+      }
+
+      60% {
+        transform: translate(-3px, 1px) rotate(0deg);
+      }
+
+      70% {
+        transform: translate(3px, 1px) rotate(-1deg);
+      }
+
+      80% {
+        transform: translate(-1px, -1px) rotate(1deg);
+      }
+
+      90% {
+        transform: translate(1px, 2px) rotate(0deg);
+      }
+
+      100% {
+        transform: translate(1px, -2px) rotate(-1deg);
+      }
+    }
+
+    .shake-anim {
+      animation: shake 0.5s;
+      border-color: var(--neon-pink) !important;
+    }
+
+    .glow-correct {
+      box-shadow: 0 0 40px rgba(46, 204, 113, 0.4) !important;
+      border-color: #2ecc71 !important;
+    }
+
+    .pop-anim {
+      animation: pulse 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.3);
+      }
+
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    .footer {
+      font-size: 0.8rem;
+      color: rgba(255, 255, 255, 0.3);
+      position: fixed;
+      bottom: 10px;
+    }
+
+    /* Rules list aesthetics */
+    ul {
+      text-align: left;
+      background: rgba(0, 0, 0, 0.2);
+      padding: 20px 20px 20px 40px;
+      border-radius: 10px;
+      margin: 20px 0;
+    }
+
+    li {
+      margin-bottom: 8px;
+      color: var(--text-dim);
+    }
+
+    li::marker {
+      color: var(--neon-blue);
+    }
+
+    canvas {
+      background: rgba(0, 0, 0, 0.3) !important;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    /* In-game close button (top-right) */
+    .close-btn {
+      position: absolute;
+      top: -18px;
+      right: -18px;
+      width: 42px;
+      height: 42px;
+      padding: 0;
+      margin: 0;
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #fff;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 18px;
+      line-height: 42px;
+      box-shadow: none;
+      text-transform: none;
+      z-index: 5;
+    }
+
+    .close-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 0 18px rgba(188, 19, 254, 0.35);
+      border-color: rgba(188, 19, 254, 0.5);
+    }
+
+    /* Lesson UI */
+    .lesson-card {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 14px;
+      margin-top: 12px;
+    }
+
+    .lesson-quiz {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .lesson-quiz input[type="number"] {
+      margin-bottom: 0;
+    }
+
+    .row-btns {
+      display: flex;
+      gap: 10px;
+    }
+
+    .row-btns button {
+      width: auto;
+      flex: 1;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Intro Screen -->
+  <div class="game-container" id="intro-screen">
+    <h1>Galactic Math</h1>
+    <div class="player-name">
+      <label for="player-name">Pilot Name</label>
+      <input type="text" id="player-name" placeholder="Enter Call Sign">
+    </div>
+    <div class="grade-select">
+      <label for="grade-level">Difficulty Sector</label>
+      <select id="grade-level">
+        <option value="3">Easy</option>
+        <option value="4">Medium</option>
+        <option value="5">Hard</option>
+        <option value="6">Extreme</option>
+        <option value="Adaptive">Adaptive AI</option>
+      </select>
+    </div>
+    <div class="duration-select">
+      <label for="game-duration">Mission Time</label>
+      <select id="game-duration">
+        <option value="60">1 Minute</option>
+        <option value="120">2 Minutes</option>
+        <option value="180" selected>3 Minutes</option>
+        <option value="240">4 Minutes</option>
+        <option value="300">5 Minutes</option>
+        <option value="360">6 Minutes</option>
+        <option value="420">7 Minutes</option>
+        <option value="480">8 Minutes</option>
+        <option value="540">9 Minutes</option>
+        <option value="600">10 Minutes</option>
+      </select>
+    </div>
+    <h2>Mission Rules:</h2>
+    <ul>
+      <li>Answer fast to boost shield (Score)</li>
+      <li>Correct answers: +3 Points</li>
+      <li>Mistakes: -1 Point + Hull Damage</li>
+      <li id="operations-list">Adaptive Mode enabled for training</li>
+    </ul>
+    <button type="button" onclick="openSoundMenu()">Sound</button>
+    <button onclick="startMission()">Launch Mission</button>
+    <div id="intro-error" style="margin-top: 12px; min-height: 20px; color: #ff0055; font-weight: 600;"></div>
+  </div>
+
+  <!-- Sound Screen -->
+  <div class="game-container" id="sound-screen" style="display: none; text-align: left;">
+    <button class="close-btn" type="button" onclick="closeSoundMenu()" aria-label="Back">←</button>
+    <h1 style="text-align:center; margin-top: 10px;">Sound</h1>
+
+    <div style="margin-top: 20px;">
+      <h2 style="margin-bottom: 10px;">Music</h2>
+      <label style="display:flex; align-items:center; gap:10px; margin: 10px 0;">
+        <input type="checkbox" id="music-enabled" style="width:auto; margin:0;"> Enabled
+      </label>
+      <label for="music-volume">Volume</label>
+      <input type="range" id="music-volume" min="0" max="100" value="40" style="width: 100%;">
+    </div>
+
+    <div style="margin-top: 22px;">
+      <h2 style="margin-bottom: 10px;">SFX</h2>
+      <label style="display:flex; align-items:center; gap:10px; margin: 10px 0;">
+        <input type="checkbox" id="sfx-enabled" style="width:auto; margin:0;"> Enabled
+      </label>
+      <label for="sfx-volume">Volume</label>
+      <input type="range" id="sfx-volume" min="0" max="100" value="70" style="width: 100%;">
+
+      <div style="margin-top: 14px; display: grid; grid-template-columns: 1fr; gap: 10px;">
+        <label style="display:flex; align-items:center; justify-content:space-between; gap:10px;">
+          <span>Correct</span>
+          <input type="checkbox" id="sfx-correct-enabled" style="width:auto; margin:0;">
+        </label>
+        <label style="display:flex; align-items:center; justify-content:space-between; gap:10px;">
+          <span>Wrong</span>
+          <input type="checkbox" id="sfx-wrong-enabled" style="width:auto; margin:0;">
+        </label>
+      </div>
+
+      <div style="margin-top: 16px; display:flex; gap: 10px;">
+        <button type="button" onclick="testSfx('correct')">Test Correct</button>
+        <button type="button" onclick="testSfx('wrong')">Test Wrong</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lesson Screen (Story + Training) -->
+  <div class="game-container" id="lesson-screen" style="display: none; text-align: left;">
+    <button class="close-btn" type="button" onclick="exitLessonToMenu()" aria-label="Back">←</button>
+    <h1 id="lesson-title" style="text-align:center; margin-top: 10px;">Training</h1>
+    <div id="lesson-progress" style="text-align:center; color: var(--text-dim); font-size: 0.9rem; margin-bottom: 14px;"></div>
+
+    <div id="lesson-body" style="line-height: 1.6; color: var(--text-main);"></div>
+
+    <div id="lesson-interactive" style="margin-top: 16px;"></div>
+    <div id="lesson-feedback" style="margin-top: 10px; min-height: 18px; font-weight: 600;"></div>
+
+    <div class="row-btns" style="margin-top: 18px;">
+      <button type="button" onclick="skipLesson()">Skip</button>
+      <button type="button" id="lesson-next" onclick="lessonNext()">Next</button>
+    </div>
+  </div>
+
+  <!-- Game Screen -->
+  <div class="game-container" id="game-screen" style="display: none;">
+    <button class="close-btn" type="button" onclick="exitToMenu()" aria-label="Back to main menu">✕</button>
+    <div class="stats">
+      <div class="score">SCORE<span id="score">0</span></div>
+      <div class="timer">TIME<span id="timer">3:00</span></div>
+      <div class="score">LEVEL<span id="difficulty">Easy</span></div>
+    </div>
+    <div class="question" id="question"></div>
+    <input type="number" id="answer" placeholder="Your answer" step="any" autofocus>
+    <button style="margin-bottom: 10px;" onclick="checkAnswer()">FIRE ANSWER</button>
+    <div class="feedback" id="feedback"></div>
+  </div>
+
+  <!-- Result Screen -->
+  <div class="game-container" id="result-screen" style="display: none;">
+    <div class="game-over" id="congrats-message" style="font-size: 24px; font-weight: bold; margin-bottom: 20px;"></div>
+    <h1>Mission Debrief</h1>
+    <h2>Final Score: <span id="final-score">0</span></h2>
+    <div class="result-stats">
+      <div class="stat-box">
+        <h3 id="correct-count">0</h3>
+        <p>Correct</p>
+      </div>
+      <div class="stat-box">
+        <h3 id="incorrect-count">0</h3>
+        <p>Incorrect</p>
+      </div>
+      <div class="stat-box">
+        <h3 id="total-count">0</h3>
+        <p>Total Ops</p>
+      </div>
+      <div class="stat-box">
+        <h3 id="accuracy">0%</h3>
+        <p>Accuracy</p>
+      </div>
+      <div class="stat-box">
+        <h3 id="avg-time">0s</h3>
+        <p>Avg Time</p>
+      </div>
+    </div>
+
+    <div id="motivation" style="font-size: 1.1em; color: var(--neon-blue); margin: 15px 0;"></div>
+
+    <div id="criticism-box"
+      style="background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 10px; margin: 10px 0 20px 0;">
+      <h3 style="color: var(--neon-pink); margin-top: 0; font-size: 1rem;">Coaching Notes</h3>
+      <div id="criticism" style="color: var(--text-main); line-height: 1.6;"></div>
+    </div>
+
+    <div id="lifetime-box"
+      style="background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 10px; margin: 10px 0 20px 0;">
+      <h3 style="color: var(--neon-pink); margin-top: 0; font-size: 1rem;">Lifetime Ops Summary</h3>
+      <div id="lifetime-stats" style="color: var(--text-main); line-height: 1.6;"></div>
+    </div>
+
+    <div style="display: flex; gap: 15px; flex-wrap: wrap; justify-content: center; margin-bottom: 20px;">
+      <div style="background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 10px; flex: 1; min-width: 260px;">
+        <h3 style="color: var(--neon-pink); margin-top: 0; font-size: 1rem;">System Heatmap</h3>
+        <canvas id="heatmapCanvas" width="400" height="200"
+          style="width: 100%; max-width: 400px; border-radius: 5px;"></canvas>
+      </div>
+
+      <div style="background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 10px; flex: 1; min-width: 260px;">
+        <h3 style="color: var(--neon-pink); margin-top: 0; font-size: 1rem;">Accuracy Analytics</h3>
+        <canvas id="accuracyCanvas" width="400" height="200"
+          style="width: 100%; max-width: 400px; border-radius: 5px;"></canvas>
+      </div>
+    </div>
+
+    <button onclick="resetGame()">Re-Initialize Mission</button>
+  </div>
+
+  <script>
+    const API = "http://127.0.0.1:5000";
+
+    const AUDIO = {
+      bg: "Assets/bg.mp3",
+      correct: "Assets/correct.mp3",
+      wrong: "Assets/wrong.mp3",
+    };
+
+    const SETTINGS_KEY = "galactic_math_settings_v1";
+    const LIFETIME_KEY = "galactic_math_lifetime_ops_v1";
+
+    let bgAudio = null;
+    let correctAudio = null;
+    let wrongAudio = null;
+
+    let settings = {
+      musicEnabled: true,
+      musicVolume: 0.4,
+      sfxEnabled: true,
+      sfxVolume: 0.7,
+      sfxCorrectEnabled: true,
+      sfxWrongEnabled: true,
+    };
+
+    let timerInterval = null;
+    let score = 0;
+    let correctAnswers = 0;
+    let incorrectAnswers = 0;
+    let totalAnswered = 0;
+    let timeLeft = 0;
+
+    let currentPlayerName = "";
+
+    function blankLifetime() {
+      return {
+        player: "",
+        ops: {
+          addition: { total: 0, correct: 0 },
+          subtraction: { total: 0, correct: 0 },
+          multiplication: { total: 0, correct: 0 },
+          division: { total: 0, correct: 0 },
+        }
+      };
+    }
+
+    function loadLifetime() {
+      try {
+        const raw = localStorage.getItem(LIFETIME_KEY);
+        if (!raw) return blankLifetime();
+        const parsed = JSON.parse(raw);
+        const base = blankLifetime();
+        return {
+          ...base,
+          ...parsed,
+          ops: { ...base.ops, ...(parsed.ops || {}) },
+        };
+      } catch {
+        return blankLifetime();
+      }
+    }
+
+    function saveLifetime(lifetime) {
+      try {
+        localStorage.setItem(LIFETIME_KEY, JSON.stringify(lifetime));
+      } catch {
+        // ignore
+      }
+    }
+
+    function ensureLifetimePlayer(playerName) {
+      const name = (playerName || "").trim() || "Pilot";
+      const lifetime = loadLifetime();
+      if ((lifetime.player || "") !== name) {
+        const fresh = blankLifetime();
+        fresh.player = name;
+        saveLifetime(fresh);
+        return fresh;
+      }
+      return lifetime;
+    }
+
+    function inferTopicFromQuestionText(qText) {
+      const t = (qText || "").toString();
+      if (t.includes("×")) return "multiplication";
+      if (t.includes("÷")) return "division";
+      // Put subtraction before negative numbers? Questions are like "a - b" so this is fine.
+      if (t.includes("-")) return "subtraction";
+      if (t.includes("+")) return "addition";
+      return null;
+    }
+
+    function updateLifetime(topic, wasCorrect) {
+      if (!topic) return;
+      const lifetime = ensureLifetimePlayer(currentPlayerName);
+      const bucket = lifetime.ops?.[topic];
+      if (!bucket) return;
+      bucket.total += 1;
+      if (wasCorrect) bucket.correct += 1;
+      saveLifetime(lifetime);
+    }
+
+    function renderLifetimeStats() {
+      const el = document.getElementById("lifetime-stats");
+      if (!el) return;
+
+      const lifetime = ensureLifetimePlayer(currentPlayerName);
+      const ops = lifetime.ops || {};
+      const rows = Object.entries(ops).map(([k, v]) => {
+        const total = Number(v?.total || 0);
+        const correct = Number(v?.correct || 0);
+        const acc = total > 0 ? Math.round((correct / total) * 100) : 0;
+        return { key: k, total, correct, acc };
+      });
+
+      // Rank by correct desc, then total desc
+      rows.sort((a, b) => (b.correct - a.correct) || (b.total - a.total));
+
+      const pretty = (k) => ({
+        addition: "Addition",
+        subtraction: "Subtraction",
+        multiplication: "Multiplication",
+        division: "Division",
+      }[k] || k);
+
+      const html = rows.map((r, idx) => {
+        return `<div style="display:flex; justify-content:space-between; gap:10px; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.06);">
+          <div style="color: var(--text-main);">${idx + 1}. ${pretty(r.key)}</div>
+          <div style="color: var(--text-dim);">Correct: <span style="color: var(--neon-blue);">${r.correct}</span> / Total: ${r.total} • ${r.acc}%</div>
+        </div>`;
+      }).join("");
+
+      el.innerHTML = html || "<div style=\"color: var(--text-dim);\">No lifetime stats yet.</div>";
+    }
+
+    function loadSettings() {
+      try {
+        const raw = localStorage.getItem(SETTINGS_KEY);
+        if (!raw) return;
+        const parsed = JSON.parse(raw);
+        settings = { ...settings, ...parsed };
+      } catch {
+        // ignore
+      }
+    }
+
+    function saveSettings() {
+      try {
+        localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+      } catch {
+        // ignore
+      }
+    }
+
+    function ensureAudioInit() {
+      if (bgAudio && correctAudio && wrongAudio) return;
+
+      bgAudio = new Audio(AUDIO.bg);
+      bgAudio.loop = true;
+      bgAudio.preload = "auto";
+
+      correctAudio = new Audio(AUDIO.correct);
+      correctAudio.preload = "auto";
+
+      wrongAudio = new Audio(AUDIO.wrong);
+      wrongAudio.preload = "auto";
+
+      applyAudioSettings();
+    }
+
+    function applyAudioSettings() {
+      if (bgAudio) {
+        bgAudio.volume = Math.max(0, Math.min(1, settings.musicVolume));
+        bgAudio.muted = !settings.musicEnabled;
+      }
+      // SFX volume is applied at play-time so we can reuse audio objects
+    }
+
+    async function tryStartBgMusic() {
+      ensureAudioInit();
+      applyAudioSettings();
+      if (!settings.musicEnabled) return;
+      try {
+        if (bgAudio && bgAudio.paused) {
+          await bgAudio.play();
+        }
+      } catch (e) {
+        // Autoplay may be blocked until a user gesture; ignore.
+        console.debug("BG music blocked until user gesture", e);
+      }
+    }
+
+    function playSfx(kind) {
+      ensureAudioInit();
+      if (!settings.sfxEnabled) return;
+      if (kind === "correct" && !settings.sfxCorrectEnabled) return;
+      if (kind === "wrong" && !settings.sfxWrongEnabled) return;
+
+      const vol = Math.max(0, Math.min(1, settings.sfxVolume));
+      const audio = kind === "correct" ? correctAudio : wrongAudio;
+      if (!audio) return;
+      try {
+        audio.volume = vol;
+        audio.currentTime = 0;
+        audio.play();
+      } catch (e) {
+        console.debug("SFX play failed", e);
+      }
+    }
+
+    function syncSoundUIFromSettings() {
+      const me = document.getElementById("music-enabled");
+      const mv = document.getElementById("music-volume");
+      const se = document.getElementById("sfx-enabled");
+      const sv = document.getElementById("sfx-volume");
+      const sce = document.getElementById("sfx-correct-enabled");
+      const swe = document.getElementById("sfx-wrong-enabled");
+
+      if (me) me.checked = !!settings.musicEnabled;
+      if (mv) mv.value = String(Math.round(settings.musicVolume * 100));
+      if (se) se.checked = !!settings.sfxEnabled;
+      if (sv) sv.value = String(Math.round(settings.sfxVolume * 100));
+      if (sce) sce.checked = !!settings.sfxCorrectEnabled;
+      if (swe) swe.checked = !!settings.sfxWrongEnabled;
+    }
+
+    function wireSoundUI() {
+      const me = document.getElementById("music-enabled");
+      const mv = document.getElementById("music-volume");
+      const se = document.getElementById("sfx-enabled");
+      const sv = document.getElementById("sfx-volume");
+      const sce = document.getElementById("sfx-correct-enabled");
+      const swe = document.getElementById("sfx-wrong-enabled");
+
+      const applyAndSave = () => {
+        if (me) settings.musicEnabled = me.checked;
+        if (mv) settings.musicVolume = parseInt(mv.value || "40", 10) / 100;
+        if (se) settings.sfxEnabled = se.checked;
+        if (sv) settings.sfxVolume = parseInt(sv.value || "70", 10) / 100;
+        if (sce) settings.sfxCorrectEnabled = sce.checked;
+        if (swe) settings.sfxWrongEnabled = swe.checked;
+
+        saveSettings();
+        applyAudioSettings();
+        // If user enabled music, try to start immediately (user gesture already happened)
+        tryStartBgMusic();
+      };
+
+      [me, mv, se, sv, sce, swe].forEach((el) => {
+        if (!el) return;
+        el.addEventListener("change", applyAndSave);
+        el.addEventListener("input", applyAndSave);
+      });
+    }
+
+    function openSoundMenu() {
+      tryStartBgMusic();
+      document.getElementById("intro-screen").style.display = "none";
+      document.getElementById("result-screen").style.display = "none";
+      document.getElementById("game-screen").style.display = "none";
+      document.getElementById("lesson-screen").style.display = "none";
+      document.getElementById("sound-screen").style.display = "block";
+
+      syncSoundUIFromSettings();
+      wireSoundUI();
+    }
+
+    function closeSoundMenu() {
+      document.getElementById("sound-screen").style.display = "none";
+      document.getElementById("intro-screen").style.display = "block";
+    }
+
+    function testSfx(kind) {
+      // Ensure a user gesture has occurred before calling
+      tryStartBgMusic();
+      playSfx(kind);
+    }
+
+    // Load saved settings and initialize audio on first user interaction
+    loadSettings();
+    document.addEventListener("pointerdown", () => {
+      tryStartBgMusic();
+    }, { once: true });
+    document.addEventListener("keydown", () => {
+      tryStartBgMusic();
+    }, { once: true });
+
+    function resetGame() {
+      // Hide results, show intro
+      document.getElementById("result-screen").style.display = "none";
+      document.getElementById("intro-screen").style.display = "block";
+
+      // Reset local vars just in case
+      score = 0;
+      correctAnswers = 0;
+      incorrectAnswers = 0;
+
+      // Clear inputs optional
+      document.getElementById("score").textContent = "0";
+      document.getElementById("timer").textContent = "3:00";
+    }
+
+    let pendingMission = null;
+    let lessonState = {
+      levelVal: null,
+      steps: [],
+      idx: 0,
+      currentQuizOk: true,
+    };
+
+    function levelNameFromValue(levelVal) {
+      const map = {
+        "3": "Easy",
+        "4": "Medium",
+        "5": "Hard",
+        "6": "Extreme",
+        "Adaptive": "Adaptive AI",
+      };
+      return map[levelVal] || "Easy";
+    }
+
+    function buildLessonSteps(levelVal, pilotName) {
+      const pilot = pilotName || "Pilot";
+
+      if (levelVal === "Adaptive") {
+        return [
+          {
+            title: "Adaptive AI: Your Co‑Pilot",
+            body: `Welcome, ${pilot}. This sector uses Adaptive AI. It watches your recent answers and your speed, then adjusts difficulty to keep you learning—without overwhelming you.`
+          },
+          {
+            title: "How It Responds",
+            body: "Answer accurately and quickly → difficulty increases. Miss multiple times or slow down → it reduces difficulty and gives you hints.",
+          },
+          {
+            title: "Calibration Check",
+            body: "Quick warm-up. Solve this to sync your HUD.",
+            quiz: { q: "8 + 7 = ?", a: 15, hint: "Try 8 + 2 + 5" }
+          },
+          {
+            title: "Mission Start",
+            body: "Calibration complete. The AI is online. Launching mission…"
+          }
+        ];
+      }
+
+      if (levelVal === "3") {
+        return [
+          {
+            title: "Easy Sector: Arrival",
+            body: `Captain ${pilot}, we’re entering the Easy Sector. Your ship’s computer will focus on Addition and Subtraction with small numbers.`
+          },
+          {
+            title: "Addition Trick",
+            body: "Tip: Break numbers into tens and ones. Example: 14 + 6 = (14 + 5) + 1 = 20.",
+            quiz: { q: "14 + 6 = ?", a: 20, hint: "Make a 20." }
+          },
+          {
+            title: "Subtraction Trick",
+            body: "Tip: Subtraction is distance. Example: 19 − 7 = (19 − 10) + 3 = 12.",
+            quiz: { q: "19 − 7 = ?", a: 12, hint: "Subtract 10 then add back 3." }
+          },
+          {
+            title: "Mission Start",
+            body: "Training complete. Launching Easy mission…"
+          }
+        ];
+      }
+
+      if (levelVal === "4") {
+        return [
+          {
+            title: "Medium Sector: Upgrade",
+            body: `Good work, ${pilot}. Medium Sector adds Multiplication. Think of it as repeated addition.`
+          },
+          {
+            title: "Multiplication Basics",
+            body: "Example: 6 × 4 means four groups of six (6 + 6 + 6 + 6).",
+            quiz: { q: "6 × 4 = ?", a: 24, hint: "6+6+6+6" }
+          },
+          {
+            title: "Mixed Practice",
+            body: "Now you may see +, −, and ×. Stay calm and compute one step at a time.",
+            quiz: { q: "10 + 7 × 2 = ?", a: 24, hint: "Multiply first: 7×2" }
+          },
+          {
+            title: "Mission Start",
+            body: "Systems synced. Launching Medium mission…"
+          }
+        ];
+      }
+
+      if (levelVal === "5") {
+        return [
+          {
+            title: "Hard Sector: New Threats",
+            body: `Hard Sector introduces Division. Division asks: “How many groups?” or “What times what equals this?”`
+          },
+          {
+            title: "Division as Inverse",
+            body: "If 7 × 3 = 21, then 21 ÷ 7 = 3 and 21 ÷ 3 = 7.",
+            quiz: { q: "21 ÷ 7 = ?", a: 3, hint: "What times 7 gives 21?" }
+          },
+          {
+            title: "Accuracy Under Pressure",
+            body: "Hard problems appear faster. Use the inverse operation to check your answer.",
+            quiz: { q: "72 ÷ 9 = ?", a: 8, hint: "9 × 8 = 72" }
+          },
+          {
+            title: "Mission Start",
+            body: "Hard training complete. Launching Hard mission…"
+          }
+        ];
+      }
+
+      // Extreme (6)
+      return [
+        {
+          title: "Extreme Sector: Deep Space",
+          body: `Extreme Sector uses larger numbers and may include tricky division. Stay focused, ${pilot}.`
+        },
+        {
+          title: "Break Big Numbers",
+          body: "Tip: Split large numbers. Example: 120 + 85 = (120 + 80) + 5 = 205.",
+          quiz: { q: "120 + 85 = ?", a: 205, hint: "Add 80 then 5." }
+        },
+        {
+          title: "Precision Division",
+          body: "If division doesn’t come out clean, estimate then refine. (This game may allow decimals in Extreme.)",
+          quiz: { q: "25 ÷ 4 = ?", a: 6.25, hint: "4×6=24, remainder 1 → 1/4=0.25" }
+        },
+        {
+          title: "Mission Start",
+          body: "Extreme training complete. Launching Extreme mission…"
+        }
+      ];
+    }
+
+    function openLesson(levelVal, pilotName) {
+      lessonState.levelVal = levelVal;
+      lessonState.steps = buildLessonSteps(levelVal, pilotName);
+      lessonState.idx = 0;
+      lessonState.currentQuizOk = true;
+
+      document.getElementById("intro-screen").style.display = "none";
+      document.getElementById("sound-screen").style.display = "none";
+      document.getElementById("game-screen").style.display = "none";
+      document.getElementById("result-screen").style.display = "none";
+      document.getElementById("lesson-screen").style.display = "block";
+
+      renderLesson();
+    }
+
+    function exitLessonToMenu() {
+      pendingMission = null;
+      document.getElementById("lesson-screen").style.display = "none";
+      document.getElementById("intro-screen").style.display = "block";
+    }
+
+    function renderLesson() {
+      const step = lessonState.steps[lessonState.idx];
+      if (!step) return;
+
+      const title = document.getElementById("lesson-title");
+      const progress = document.getElementById("lesson-progress");
+      const body = document.getElementById("lesson-body");
+      const interactive = document.getElementById("lesson-interactive");
+      const feedback = document.getElementById("lesson-feedback");
+      const nextBtn = document.getElementById("lesson-next");
+
+      title.textContent = step.title;
+      progress.textContent = `Step ${lessonState.idx + 1} of ${lessonState.steps.length} • ${levelNameFromValue(lessonState.levelVal)}`;
+      body.textContent = step.body;
+      interactive.innerHTML = "";
+      feedback.textContent = "";
+      feedback.style.color = "";
+
+      lessonState.currentQuizOk = true;
+      nextBtn.disabled = false;
+      nextBtn.textContent = lessonState.idx === lessonState.steps.length - 1 ? "Start Mission" : "Next";
+
+      if (step.quiz) {
+        lessonState.currentQuizOk = false;
+        nextBtn.disabled = true;
+
+        const card = document.createElement("div");
+        card.className = "lesson-card";
+
+        const q = document.createElement("div");
+        q.style.fontFamily = "Orbitron, sans-serif";
+        q.style.fontSize = "1.1rem";
+        q.style.marginBottom = "8px";
+        q.textContent = step.quiz.q;
+
+        const input = document.createElement("input");
+        input.type = "number";
+        input.step = "any";
+        input.placeholder = "Enter answer";
+
+        const hint = document.createElement("div");
+        hint.style.color = "var(--text-dim)";
+        hint.style.fontSize = "0.85rem";
+        hint.textContent = step.quiz.hint ? `Hint: ${step.quiz.hint}` : "";
+
+        const check = () => {
+          const v = input.value;
+          if (v === "") {
+            feedback.textContent = "";
+            nextBtn.disabled = true;
+            return;
+          }
+          const user = parseFloat(v);
+          const ans = parseFloat(step.quiz.a);
+          const ok = Math.abs(user - ans) < 0.01;
+          lessonState.currentQuizOk = ok;
+          if (ok) {
+            feedback.textContent = "✔ Correct. Proceed.";
+            feedback.style.color = "#2ecc71";
+            nextBtn.disabled = false;
+          } else {
+            feedback.textContent = "✖ Not quite. Try again.";
+            feedback.style.color = "#ff0055";
+            nextBtn.disabled = true;
+          }
+        };
+
+        input.addEventListener("input", check);
+
+        card.appendChild(q);
+        card.appendChild(input);
+        if (step.quiz.hint) card.appendChild(hint);
+        interactive.appendChild(card);
+
+        setTimeout(() => input.focus(), 50);
+      }
+    }
+
+    function lessonNext() {
+      const isLast = lessonState.idx >= lessonState.steps.length - 1;
+      if (isLast) {
+        if (pendingMission) {
+          startGameInternal(pendingMission);
+        } else {
+          exitLessonToMenu();
+        }
+        return;
+      }
+      lessonState.idx += 1;
+      renderLesson();
+    }
+
+    function skipLesson() {
+      if (pendingMission) {
+        startGameInternal(pendingMission);
+      } else {
+        exitLessonToMenu();
+      }
+    }
+
+    function startMission() {
+      const introError = document.getElementById("intro-error");
+      if (introError) introError.textContent = "";
+
+      tryStartBgMusic();
+
+      const nameInput = document.getElementById("player-name");
+      const durationInput = document.getElementById("game-duration");
+      const levelSelect = document.getElementById("grade-level");
+
+      const playerName = nameInput?.value || "Pilot";
+      const duration = parseInt(durationInput?.value || "60");
+      const levelVal = levelSelect ? levelSelect.value : "3";
+
+      currentPlayerName = (playerName || "").trim() || "Pilot";
+      ensureLifetimePlayer(currentPlayerName);
+
+      pendingMission = { playerName, duration, levelVal };
+      openLesson(levelVal, playerName);
+    }
+
+    function exitToMenu() {
+      clearInterval(timerInterval);
+      timerInterval = null;
+
+      // Reset local state
+      score = 0;
+      correctAnswers = 0;
+      incorrectAnswers = 0;
+      totalAnswered = 0;
+
+      // Restore timer label based on selected duration
+      const durationInput = document.getElementById("game-duration");
+      const secs = parseInt(durationInput?.value || "180");
+      const m = Math.floor(secs / 60);
+      const s = secs % 60;
+      document.getElementById("timer").textContent = `${m}:${s < 10 ? '0' : ''}${s}`;
+
+      document.getElementById("score").textContent = "0";
+      document.getElementById("question").textContent = "";
+      const feedback = document.getElementById("feedback");
+      if (feedback) {
+        feedback.textContent = "";
+        feedback.className = "feedback";
+        feedback.style = "";
+      }
+      const answerInput = document.getElementById("answer");
+      if (answerInput) answerInput.value = "";
+
+      // Switch screens
+      document.getElementById("game-screen").style.display = "none";
+      document.getElementById("result-screen").style.display = "none";
+      document.getElementById("lesson-screen").style.display = "none";
+      const intro = document.getElementById("intro-screen");
+      intro.style.display = "block";
+    }
+
+    /* -------------------- START GAME -------------------- */
+    async function startGameInternal(mission) {
+      const introError = document.getElementById("intro-error");
+      if (introError) introError.textContent = "";
+
+      // Start background music (may be blocked until user gesture; this is user gesture)
+      tryStartBgMusic();
+
+      const playerName = mission?.playerName || "Pilot";
+      currentPlayerName = (playerName || "").trim() || "Pilot";
+      ensureLifetimePlayer(currentPlayerName);
+      timeLeft = parseInt(String(mission?.duration ?? "60"), 10);
+      const levelVal = mission?.levelVal || "3";
+
+      try {
+        const res = await fetch(`${API}/start`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: playerName,
+            duration: timeLeft,
+            level: levelVal
+          })
+        });
+
+        if (!res.ok) {
+          throw new Error(`Server error (${res.status})`);
+        }
+      } catch (err) {
+        const msg = "Backend not reachable. Start the Flask server: `python back.py` (http://127.0.0.1:5000).";
+        if (introError) introError.textContent = msg;
+        else alert(msg);
+        console.error("Failed to start game:", err);
+        exitLessonToMenu();
+        return;
+      }
+
+      score = 0;
+      correctAnswers = 0;
+      incorrectAnswers = 0;
+      totalAnswered = 0;
+
+      document.getElementById("score").textContent = score;
+      document.getElementById("feedback").textContent = "";
+
+      document.getElementById("intro-screen").style.display = "none";
+      document.getElementById("lesson-screen").style.display = "none";
+      document.getElementById("sound-screen").style.display = "none";
+      document.getElementById("game-screen").style.display = "block";
+      document.getElementById("result-screen").style.display = "none";
+
+      pendingMission = null;
+
+      loadQuestion();
+      clearInterval(timerInterval);
+      timerInterval = setInterval(updateTimer, 1000);
+    }
+
+    // Keep old name working (e.g. existing onclicks)
+    async function startGame() {
+      startMission();
+    }
+
+    /* -------------------- LOAD QUESTION -------------------- */
+    async function loadQuestion() {
+      const res = await fetch(`${API}/question`);
+      const data = await res.json();
+
+      document.getElementById("question").textContent = data.question;
+      document.getElementById("difficulty").textContent = data.level || "";
+
+      // Part 4: Smart Hint for next question if previous was wrong
+      if (data.help) {
+        const feedback = document.getElementById("feedback");
+        feedback.innerHTML = "💡 <strong>Tip for this one:</strong> " + data.help;
+        feedback.className = "feedback";
+        feedback.style.backgroundColor = "#e3f2fd"; // keep distinct color for tips or use css var?
+        feedback.style.backgroundColor = "rgba(0, 243, 255, 0.1)"; // Neon blue low opacity
+        feedback.style.color = "#00f3ff";
+        feedback.style.border = "1px solid #00f3ff";
+
+        // Hide after 10 seconds
+        setTimeout(() => {
+          if (feedback.innerHTML.includes("Tip")) {
+            feedback.innerHTML = "";
+            feedback.style = "";
+          }
+        }, 10000);
+      }
+    }
+
+    /* -------------------- SUBMIT ANSWER -------------------- */
+    async function checkAnswer() {
+      const answerInput = document.getElementById("answer");
+      const userAnswer = answerInput.value;
+
+      if (userAnswer === "") return;
+
+      const res = await fetch(`${API}/answer`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ answer: userAnswer })
+      });
+
+      const data = await res.json();
+      totalAnswered++;
+
+      const topic = inferTopicFromQuestionText(document.getElementById("question")?.textContent);
+      updateLifetime(topic, !!data.correct);
+
+      const feedback = document.getElementById("feedback");
+      const gameContainer = document.getElementById("game-screen");
+
+      if (data.correct) {
+        playSfx("correct");
+        score += 3;
+        correctAnswers++;
+        feedback.innerHTML = "✔ <strong>CORRECT!</strong>";
+        feedback.className = "feedback correct";
+        feedback.style.backgroundColor = "";
+        feedback.style.color = "";
+
+        // Visuals
+        gameContainer.classList.add("glow-correct");
+      } else {
+        playSfx("wrong");
+        score -= 1;
+        incorrectAnswers++;
+        // COMBINED HINT AND WRONG
+        feedback.innerHTML = "❌ <strong>WRONG!</strong><br>💡 Hint: " + (data.hint || "");
+        feedback.className = "feedback";
+        feedback.style.backgroundColor = "rgba(255, 0, 85, 0.2)";
+        feedback.style.color = "#ff0055";
+        feedback.style.border = "1px solid #ff0055";
+
+        // Visuals
+        gameContainer.classList.add("shake-anim");
+      }
+
+      document.getElementById("score").textContent = score;
+      document.getElementById("score").classList.add("pop-anim");
+
+      // WAIT time based on adaptive difficulty (data.delay)
+      const waitTime = data.delay || 1200;
+
+      setTimeout(() => {
+        // Cleanup visuals
+        gameContainer.classList.remove("shake-anim");
+        gameContainer.classList.remove("glow-correct");
+        document.getElementById("score").classList.remove("pop-anim");
+        feedback.textContent = "";
+        feedback.className = "feedback";
+        feedback.style = ""; // clear inline styles
+
+        answerInput.value = "";
+        loadQuestion();
+        answerInput.focus();
+      }, waitTime);
+    }
+
+    /* -------------------- TIMER -------------------- */
+    function updateTimer() {
+      timeLeft--;
+
+      const m = Math.floor(timeLeft / 60);
+      const s = timeLeft % 60;
+      document.getElementById("timer").textContent = `${m}:${s < 10 ? '0' : ''}${s}`;
+
+      if (timeLeft <= 0) {
+        clearInterval(timerInterval);
+        endGame();
+      }
+    }
+
+    /* -------------------- END GAME -------------------- */
+    async function endGame() {
+      document.getElementById("game-screen").style.display = "none";
+      document.getElementById("result-screen").style.display = "block";
+
+      const res = await fetch(`${API}/result`);
+      const data = await res.json();
+
+      const totalQ = correctAnswers + incorrectAnswers;
+      const acc = totalQ > 0 ? ((correctAnswers / totalQ) * 100).toFixed(0) : 0;
+
+      document.getElementById("final-score").textContent = score;
+      document.getElementById("correct-count").textContent = correctAnswers;
+      document.getElementById("incorrect-count").textContent = incorrectAnswers;
+      document.getElementById("total-count").textContent = totalQ;
+      document.getElementById("accuracy").textContent = acc + "%";
+      document.getElementById("avg-time").textContent = (data.avg_time || 0) + "s";
+
+      const heatmapCanvas = document.getElementById("heatmapCanvas");
+      if (heatmapCanvas && data.heatmap) {
+        drawHeatmap(data.heatmap);
+      }
+
+      const accuracyCanvas = document.getElementById("accuracyCanvas");
+      if (accuracyCanvas && data.skills) {
+        drawAccuracy(data.skills);
+      }
+
+      const messageBox = document.getElementById("motivation");
+      if (messageBox) {
+        messageBox.textContent = data.message;
+      }
+
+      const criticismBox = document.getElementById("criticism");
+      if (criticismBox) {
+        criticismBox.innerHTML = buildCriticism({
+          score,
+          correctAnswers,
+          incorrectAnswers,
+          accuracy: Number(acc),
+          avgTime: Number(data.avg_time || 0),
+          skills: data.skills || null,
+          heatmap: data.heatmap || null,
+        });
+      }
+
+      renderLifetimeStats();
+    }
+
+    function prettySkillName(skill) {
+      const map = {
+        addition: "Addition",
+        subtraction: "Subtraction",
+        multiplication: "Multiplication",
+        division: "Division",
+      };
+      return map[skill] || skill;
+    }
+
+    function findWeakestSkillFromSkills(skillsObj) {
+      if (!skillsObj) return null;
+      const entries = Object.entries(skillsObj);
+      if (entries.length === 0) return null;
+
+      // Prefer lowest accuracy among attempted skills; fallback to most mistakes.
+      let weakest = null;
+      let weakestAcc = Infinity;
+      let mostMistakes = -1;
+
+      for (const [k, v] of entries) {
+        const total = Number(v?.total || 0);
+        const correct = Number(v?.correct || 0);
+        const mistakes = Number(v?.mistakes || 0);
+
+        if (total > 0) {
+          const a = correct / total;
+          if (a < weakestAcc) {
+            weakestAcc = a;
+            weakest = k;
+          }
+        }
+        if (mistakes > mostMistakes) {
+          mostMistakes = mistakes;
+        }
+      }
+
+      if (weakest) return weakest;
+      // If no attempted skills recorded, pick the max mistakes key
+      const maxMistake = entries.reduce((best, cur) => {
+        const bm = Number(best?.[1]?.mistakes || 0);
+        const cm = Number(cur?.[1]?.mistakes || 0);
+        return cm > bm ? cur : best;
+      }, null);
+      return maxMistake ? maxMistake[0] : null;
+    }
+
+    function findWeakestSkillFromHeatmap(heatmap) {
+      if (!heatmap) return null;
+      const skills = ["addition", "subtraction", "multiplication", "division"];
+      let best = null;
+      let max = -1;
+      for (const s of skills) {
+        const v = Number(heatmap[s] || 0);
+        if (v > max) {
+          max = v;
+          best = s;
+        }
+      }
+      return best;
+    }
+
+    function buildCriticism({ score, correctAnswers, incorrectAnswers, accuracy, avgTime, skills, heatmap }) {
+      const total = correctAnswers + incorrectAnswers;
+      const acc = Number.isFinite(accuracy) ? accuracy : (total > 0 ? (correctAnswers / total) * 100 : 0);
+      const time = Number.isFinite(avgTime) ? avgTime : 0;
+
+      const weakest = findWeakestSkillFromSkills(skills) || findWeakestSkillFromHeatmap(heatmap);
+
+      // Core message
+      let headline = "";
+      if (total === 0) headline = "No answers recorded — try answering at least a few to get targeted coaching.";
+      else if (acc >= 85 && time > 0 && time <= 7) headline = "Strong run — accurate and fast. Now push consistency.";
+      else if (acc >= 85) headline = "Great accuracy — now try to answer a bit faster.";
+      else if (acc >= 60) headline = "Decent run — focus on reducing mistakes first.";
+      else headline = "This sector was tough — slow down and build accuracy step by step.";
+
+      const tips = [];
+
+      // Speed guidance
+      if (total > 0 && time >= 12) {
+        tips.push("Speed: You’re taking a long time per question. Try mental-math chunks (tens/ones) and avoid re-checking twice.");
+      } else if (total > 0 && time > 0 && time <= 5 && acc < 60) {
+        tips.push("Speed vs accuracy: You’re very fast but accuracy is low. Slow down slightly and verify with the inverse operation.");
+      }
+
+      // Accuracy guidance
+      if (total > 0 && acc < 70) {
+        tips.push("Accuracy: Aim for clean steps. If you’re unsure, estimate first, then refine.");
+      }
+
+      // Weak skill guidance
+      if (weakest) {
+        const wName = prettySkillName(weakest);
+        let wTip = "";
+        if (weakest === "addition") wTip = "Practice making tens (e.g., 8+7 → 8+2+5).";
+        if (weakest === "subtraction") wTip = "Try subtracting in parts (minus 10, plus the remainder).";
+        if (weakest === "multiplication") wTip = "Use small facts and build (e.g., 6×7 = 6×5 + 6×2).";
+        if (weakest === "division") wTip = "Use multiplication to check (inverse): a ÷ b = c → b × c = a.";
+        tips.push(`Weakest area: ${wName}. ${wTip}`);
+      }
+
+      // Score tone
+      if (Number(score) < 0) {
+        tips.push("Score tip: Avoid guessing — one careful answer beats multiple rushed mistakes.");
+      }
+
+      // Format as short list
+      const lines = [
+        `<div style="margin-bottom: 8px; font-weight: 700;">${headline}</div>`,
+        ...tips.map(t => `<div style="margin: 6px 0; color: var(--text-dim);">• ${t}</div>`)
+      ];
+      return lines.join("");
+    }
+
+    function drawHeatmap(heatmapData) {
+      const canvas = document.getElementById("heatmapCanvas");
+      if (!canvas) return;
+      const ctx = canvas.getContext("2d");
+      const width = canvas.width;
+      const height = canvas.height;
+      const padding = 40;
+
+      // Clear canvas
+      ctx.clearRect(0, 0, width, height);
+
+      const skills = ["addition", "subtraction", "multiplication", "division"];
+      const mistakes = skills.map(s => heatmapData[s] || 0);
+      const maxMistakes = Math.max(...mistakes, 5); // Minimum scale of 5
+
+      const barWidth = (width - 2 * padding) / skills.length - 20;
+
+      ctx.font = "12px Orbitron";
+      ctx.textAlign = "center";
+
+      skills.forEach((skill, i) => {
+        const value = mistakes[i];
+        const barHeight = (value / maxMistakes) * (height - 2 * padding);
+        const x = padding + i * (barWidth + 20);
+        const y = height - padding - barHeight;
+
+        // Color based on severity (Neon palette)
+        let color = "#2ecc71"; // Green
+        if (value > 2) color = "#f1c40f"; // Yellow
+        if (value > 5) color = "#ff0055"; // Red/Pink neon
+
+        ctx.fillStyle = color;
+        // Glow attempt
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = color;
+        ctx.fillRect(x, y, barWidth, barHeight);
+        ctx.shadowBlur = 0;
+
+        // Label
+        ctx.fillStyle = "#fff";
+        ctx.fillText(skill.substring(0, 3).toUpperCase(), x + barWidth / 2, height - 10);
+
+        // Value
+        ctx.fillText(value, x + barWidth / 2, y - 5);
+      });
+
+      // Axis lines
+      ctx.strokeStyle = "rgba(255,255,255,0.3)";
+      ctx.beginPath();
+      ctx.moveTo(padding - 10, padding);
+      ctx.lineTo(padding - 10, height - padding);
+      ctx.lineTo(width - padding, height - padding);
+      ctx.stroke();
+    }
+
+    function drawAccuracy(skillsData) {
+      const canvas = document.getElementById("accuracyCanvas");
+      if (!canvas) return;
+      const ctx = canvas.getContext("2d");
+      const width = canvas.width;
+      const height = canvas.height;
+      const padding = 40;
+
+      ctx.clearRect(0, 0, width, height);
+
+      const skills = ["addition", "subtraction", "multiplication", "division"];
+      const accuracies = skills.map((s) => {
+        const d = skillsData?.[s];
+        const total = Number(d?.total || 0);
+        const correct = Number(d?.correct || 0);
+        return total > 0 ? (correct / total) * 100 : 0;
+      });
+
+      const maxAcc = 100;
+      const barWidth = (width - 2 * padding) / skills.length - 20;
+
+      ctx.font = "12px Orbitron";
+      ctx.textAlign = "center";
+
+      skills.forEach((skill, i) => {
+        const value = accuracies[i];
+        const barHeight = (value / maxAcc) * (height - 2 * padding);
+        const x = padding + i * (barWidth + 20);
+        const y = height - padding - barHeight;
+
+        // Color based on accuracy (Neon palette)
+        let color = "#ff0055"; // low accuracy
+        if (value >= 70) color = "#f1c40f"; // medium
+        if (value >= 85) color = "#2ecc71"; // high
+
+        ctx.fillStyle = color;
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = color;
+        ctx.fillRect(x, y, barWidth, barHeight);
+        ctx.shadowBlur = 0;
+
+        ctx.fillStyle = "#fff";
+        ctx.fillText(skill.substring(0, 3).toUpperCase(), x + barWidth / 2, height - 10);
+        ctx.fillText(`${Math.round(value)}%`, x + barWidth / 2, y - 5);
+      });
+
+      ctx.strokeStyle = "rgba(255,255,255,0.3)";
+      ctx.beginPath();
+      ctx.moveTo(padding - 10, padding);
+      ctx.lineTo(padding - 10, height - padding);
+      ctx.lineTo(width - padding, height - padding);
+      ctx.stroke();
+    }
+
+  </script>
+
+  <div data-lastpass-root="" style="position: absolute; top: 0; left: 0; height: 0; width: 0;"></div>
+  <footer class="footer">
+    <p>System Status: ONLINE | v3.0 Adaptive</p>
+  </footer>
+</body>
+
+</html>
